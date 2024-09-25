@@ -67,8 +67,8 @@ crashlytics-build.properties
 
 # Package related files that can be ignored or are better kept user-specific
 # Found here: https://github.com/UnityTechnologies/open-project-1/blob/main/UOP1_Project/.gitignore
-/ProjectSettings/Packages/com.unity.probuilder/Settings.json
-/ProjectSettings/Packages/com.unity.polybrush/Settings.json
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+ProjectSettings/Packages/com.unity.polybrush/Settings.json
 /ProjectSettings/Packages/com.unity.progrids/Settings.json
 /ProjectSettings/Packages/com.unity.learn.iet-framework/Settings.json
 Assets/Polybrush Data*
