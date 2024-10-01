@@ -12,10 +12,11 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
     public XRBaseInteractor leftControllerInteractor;
     public XRBaseInteractor rightControllerInteractor;
     public GameObject infoCanvas;
-    public TextMeshProUGUI infoText;
 
     private InputDevice leftController;
     private InputDevice rightController;
+    private HandMenuController handMenuController;
+    private TextMeshProUGUI infoText;
     private bool rightControllerGrabbing = true;
     private int hoveringControllerCount = 0;
     private Vector3 canvasOffset = new Vector3(0f, 0.6f, 0f);
@@ -26,6 +27,8 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
     void Start() {
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
+        infoText = infoCanvas.GetComponentInChildren<TextMeshProUGUI>();
         grabInteractable.selectEntered.AddListener(OnSelectEntered);
         grabInteractable.hoverEntered.AddListener(OnHoverEntered);
         grabInteractable.hoverExited.AddListener(OnHoverExited);
@@ -100,6 +103,7 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
             rightControllerGrabbing = false;
         }
         infoCanvas.SetActive(false);
+        handMenuController.CompleteTask(0);  // Complete a demonstration task
     }
 
     // Function for cleaning up listeners, should the object be destroyed

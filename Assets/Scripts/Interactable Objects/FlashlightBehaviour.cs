@@ -12,11 +12,13 @@ public class FlashlightBehaviour : MonoBehaviour {
     public XRBaseInteractor leftControllerInteractor;
     public XRBaseInteractor rightControllerInteractor;
     public GameObject infoCanvas;
-    public TextMeshProUGUI infoText;
 
     private InputDevice leftController;
     private InputDevice rightController;
+    private HandMenuController handMenuController;
+    private TextMeshProUGUI infoText;
     private bool rightControllerGrabbing = true;
+    private bool firstTimeGrabbed = false;
     private int hoveringControllerCount = 0;
     private Vector3 canvasOffset = new Vector3(0f, 0.2f, 0f);
     private const string objectName = "Flashlight";
@@ -26,6 +28,8 @@ public class FlashlightBehaviour : MonoBehaviour {
     void Start() {
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
+        infoText = infoCanvas.GetComponentInChildren<TextMeshProUGUI>();
         grabInteractable.selectEntered.AddListener(OnSelectEntered);
         grabInteractable.hoverEntered.AddListener(OnHoverEntered);
         grabInteractable.hoverExited.AddListener(OnHoverExited);
@@ -57,6 +61,11 @@ public class FlashlightBehaviour : MonoBehaviour {
                 triggerPressed = leftController.TryGetFeatureValue(CommonUsages.trigger, out triggerValue) && triggerValue > 0.5f;
             }
 
+            // Complete a demonstration task
+            if (!firstTimeGrabbed && triggerPressed) {
+                handMenuController.CompleteTask(2);
+                firstTimeGrabbed = true;
+            }
             // If the corresponding trigger is held, activate the light, otherwise deactivate it
             flashLight.enabled = triggerPressed;
         } else if (flashLight.enabled) {

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuController : MonoBehaviour {
     public Transform gameCamera;
@@ -78,6 +79,12 @@ public class PauseMenuController : MonoBehaviour {
         menuVisible = false;
         pauseMenu.SetActive(menuVisible);
         EnableComponents(teleportInteractor);
+        Time.timeScale = 1f;
+    }
+
+    // Callback function for the restart button
+    public void GameRestartCallback() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Time.timeScale = 1f;
     }
 
