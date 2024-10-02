@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/ParticipantData/placementtest1.csv.meta
+<<<<<<< HEAD
+guid: 14c7f041232e5da4c86673c5c4ab61ba
+=======
+guid: 469b022e6e2e9dd40953994275175b15
+>>>>>>> 31944d1139a54d6611996cbf9ac5c1f06f649cc2
+TextScriptImporter:
+========
+guid: e41464f78a89e434fb5cbc889091507a
+NativeFormatImporter:
+>>>>>>>> 2a81aa592c584f000939fae43b819fa69a6f39f9:Assets/DreamForestTree/Textures/Trees/Materials/bush 1.mat.meta
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
