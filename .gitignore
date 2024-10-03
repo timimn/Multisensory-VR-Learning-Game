@@ -84,3 +84,6 @@ Assets/PolybrushData*
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 ProjectSettings/Packages/com.unity.probuilder/Settings.json
+
+# EasyRoads3D package meta files
+Assets/Imported assets/Roads and Tiles/EasyRoads3D/SRP Support Packages/*.unity[Pp]ackage.meta
