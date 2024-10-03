@@ -103,7 +103,7 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
             rightControllerGrabbing = false;
         }
         infoCanvas.SetActive(false);
-        handMenuController.CompleteTask(0);  // Complete a demonstration task
+        handMenuController.ProgressTask(0);  // Complete a demonstration task
     }
 
     // Function for cleaning up listeners, should the object be destroyed

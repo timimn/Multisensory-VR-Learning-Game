@@ -11,9 +11,13 @@ public class PauseMenuController : MonoBehaviour {
     private float offsetZ;
     private bool menuVisible = false;
     private bool previousButtonState = false;
-    private const float followSpeed = 2f;
-    private const float rotationSpeed = 5f;
-    private const float gapDistanceModifier = 0.25f;
+
+    [SerializeField]
+    private float followSpeed = 2f;
+    [SerializeField]
+    private float rotationSpeed = 5f;
+    [SerializeField]
+    private float gapDistanceModifier = 0.25f;
 
     // Start is called before the first frame update
     void Start() {

@@ -3,6 +3,7 @@ using UnityEngine.XR;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Game.Task;
 
 public class HandMenuController : MonoBehaviour {
     public GameObject handMenu;
@@ -12,19 +13,22 @@ public class HandMenuController : MonoBehaviour {
     private TextMeshProUGUI taskText;
     private CanvasGroup canvasGroup;
     private bool fadeActive = false;
+
+    [SerializeField]
     private const float fadeSpeed = 2.5f;
 
-    // Initialize tasks as a list of tuples, containing the description and completion status
-    private List<(string name, bool completed)> tasks = new List<(string name, bool completed)> {
-        ("Pick up the fire extinguisher.", false),
-        ("Discover the keys to the universe.", false),
-        ("Activate the flashlight.", false)
+    // Initialize the tasks using the custom Task class
+    private List<Task> tasks = new List<Task> {
+        new Task("Pick up the fire extinguisher."),
+        new Task("Visit both entrances of the building.", 2),
+        new Task("Activate the flashlight."),
+        new Task("Discover the keys to the universe.")
     };
     
     // Start is called before the first frame update
     void Start() {
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-        taskText = this.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        taskText = this.gameObject.GetComponentsInChildren<TextMeshProUGUI>()[0];
         canvasGroup = handMenu.GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0;
         handMenu.SetActive(false);
@@ -33,7 +37,7 @@ public class HandMenuController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        // Ensure the device stays valid
+        // Ensure the controller stays valid
         if (!leftController.isValid) {
             leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         }
@@ -59,20 +63,26 @@ public class HandMenuController : MonoBehaviour {
     public void UpdateTasks() {
         taskText.text = "Tasks:\n";
 
-        foreach ((string name, bool completed) task in tasks) {
+        foreach (Task task in tasks) {
             if (task.completed) {
-                taskText.text += $"<color=green>- {task.name}</color>\n";
+                taskText.text += $"- <color=green>{task.name}{(task.subtasksTarget > 1 ? $" ({task.subtasksTarget}/{task.subtasksTarget})" : "")}</color>\n";
+            } else if (task.subtasksCompleted > 0) {
+                taskText.text += $"- <color=yellow>{task.name} ({task.subtasksCompleted}/{task.subtasksTarget})</color>\n";
             } else {
-                taskText.text += $"- {task.name}\n";
+                taskText.text += $"- {task.name}{(task.subtasksTarget > 1 ? $" ({task.subtasksCompleted}/{task.subtasksTarget})" : "")}\n";
             }
         }
     }
 
-    // Function for marking a task as completed
-    public void CompleteTask(int index) {
+    // Function for progressing a task based on its index
+    public void ProgressTask(int index) {
         if (index >= 0 && index < tasks.Count) {
-            // Mark the task at the given index as completed, and update the list
-            tasks[index] = (tasks[index].name, true);
+            Task task = tasks[index];
+            task.subtasksCompleted++;
+
+            if (task.AllSubtasksCompleted()) {
+                task.completed = true;
+            }
             UpdateTasks();
         }
     }
