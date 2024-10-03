@@ -13,10 +13,15 @@ public class SafetyNetTriggerEvent : MonoBehaviour {
 
     // Event listener for when the trigger is entered
     private void OnTriggerEnter(Collider other) {
-        // Teleport objects that have fallen through the ground in front of the player
-        other.transform.position = gameCamera.position + gameCamera.forward * teleportDistance;
-        Rigidbody rb = other.GetComponent<Rigidbody>();
+        // If a player falls through the ground, teleport them to the spawn point
+        if (other.CompareTag("Player")) {
+            other.transform.position = new Vector3(0f, 5f, 0f);
+        } else {
+            // Teleport objects that have fallen through the ground in front of the player
+            other.transform.position = gameCamera.position + gameCamera.forward * teleportDistance;
+            Rigidbody rb = other.GetComponent<Rigidbody>();
 
-        if (rb != null) rb.velocity = Vector3.zero;
+            if (rb != null) rb.velocity = Vector3.zero;  // Reset the velocity of the object
+        }
     }
 }

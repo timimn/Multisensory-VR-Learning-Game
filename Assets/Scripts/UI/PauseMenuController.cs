@@ -3,10 +3,10 @@ using UnityEngine.XR;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuController : MonoBehaviour {
-    public Transform gameCamera;
     public GameObject pauseMenu;
     public GameObject teleportInteractor;
     
+    private Transform gameCamera;
     private InputDevice leftController;
     private float offsetZ;
     private bool menuVisible = false;
@@ -21,6 +21,7 @@ public class PauseMenuController : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        gameCamera = GameObject.Find("Main Camera").transform;
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         offsetZ = pauseMenu.transform.localPosition.z;
         pauseMenu.SetActive(false);

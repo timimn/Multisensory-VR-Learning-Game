@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class FireLightBehaviour : MonoBehaviour {
-    private Light pointLight;
+    private Light theLight;
     private float targetIntensity;
     
     [SerializeField]
@@ -13,15 +13,15 @@ public class FireLightBehaviour : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        pointLight = GetComponent<Light>();
+        theLight = GetComponent<Light>();
         targetIntensity = Random.Range(minIntensity, maxIntensity);
     }
 
     // Update is called once per frame
     void Update() {
-        pointLight.intensity = Mathf.Lerp(pointLight.intensity, targetIntensity, flickerSpeed);
+        theLight.intensity = Mathf.Lerp(theLight.intensity, targetIntensity, flickerSpeed);
 
-        if (Mathf.Abs(pointLight.intensity - targetIntensity) < 0.01f) {
+        if (Mathf.Abs(theLight.intensity - targetIntensity) < 0.01f) {
             targetIntensity = Random.Range(minIntensity, maxIntensity);
         }
     }

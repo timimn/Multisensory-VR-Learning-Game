@@ -6,10 +6,10 @@ using TMPro;
 using Game.Task;
 
 public class HandMenuController : MonoBehaviour {
-    public GameObject handMenu;
     public GameObject pauseMenu;
 
     private InputDevice leftController;
+    private GameObject handMenu;
     private TextMeshProUGUI taskText;
     private CanvasGroup canvasGroup;
     private bool fadeActive = false;
@@ -28,6 +28,7 @@ public class HandMenuController : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        handMenu = this.gameObject.GetComponentInChildren<Canvas>().gameObject;
         taskText = this.gameObject.GetComponentsInChildren<TextMeshProUGUI>()[0];
         canvasGroup = handMenu.GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0;

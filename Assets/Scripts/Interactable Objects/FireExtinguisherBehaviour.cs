@@ -6,32 +6,28 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using TMPro;
 
 public class FireExtinguisherBehaviour : MonoBehaviour {
-    public Transform gameCamera;
-    public ParticleSystem foamParticleSystem;
-    public XRGrabInteractable grabInteractable;
     public XRBaseInteractor leftControllerInteractor;
     public XRBaseInteractor rightControllerInteractor;
-    public GameObject infoCanvas;
-
+    
     private InputDevice leftController;
     private InputDevice rightController;
+    private Transform gameCamera;
     private HandMenuController handMenuController;
-    private TextMeshProUGUI infoText;
+    private XRGrabInteractable grabInteractable;
+    private ParticleSystem foamParticleSystem;
+    private GameObject infoCanvas;
     private bool rightControllerGrabbing = true;
-    private int hoveringControllerCount = 0;
-    private Vector3 canvasOffset = new Vector3(0f, 0.6f, 0f);
-    private const string objectName = "Fire Extinguisher";
-    private const string objectDescription = "Grab: [<sprite=8>/<sprite=10>]";
 
     // Start is called before the first frame update
     void Start() {
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        gameCamera = GameObject.Find("Main Camera").transform;
         handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
-        infoText = infoCanvas.GetComponentInChildren<TextMeshProUGUI>();
+        grabInteractable = this.gameObject.GetComponent<XRGrabInteractable>();
+        foamParticleSystem = this.gameObject.GetComponentInChildren<ParticleSystem>();
+        infoCanvas = this.gameObject.GetComponentInChildren<Canvas>().gameObject;
         grabInteractable.selectEntered.AddListener(OnSelectEntered);
-        grabInteractable.hoverEntered.AddListener(OnHoverEntered);
-        grabInteractable.hoverExited.AddListener(OnHoverExited);
     }
 
     // Update is called once per frame
@@ -45,11 +41,7 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
             rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
         }
         
-        // If the object is being hovered over, update the canvas to face the camera
-        if (hoveringControllerCount > 0) {
-            infoCanvas.transform.position = this.transform.position + canvasOffset;
-            infoCanvas.transform.rotation = Quaternion.LookRotation(gameCamera.forward);
-        } else if (grabInteractable.isSelected) {
+        if (grabInteractable.isSelected) {
             float triggerValue = 0f;
             bool triggerPressed = false;
 
@@ -71,26 +63,6 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
         }
     }
 
-    // Event listener, for when the object is hovered over
-    private void OnHoverEntered(HoverEnterEventArgs args) {
-        hoveringControllerCount++;
-
-        // If the object is being hovered over without being grabbed, display object information
-        if (hoveringControllerCount > 0 && !grabInteractable.isSelected) {
-            infoText.text = $"{objectName}\n{objectDescription}";
-            infoCanvas.SetActive(true);
-        }
-    }
-
-    // Event listener, for when the object is no longer hovered over
-    private void OnHoverExited(HoverExitEventArgs args) {
-        hoveringControllerCount--;
-
-        if (hoveringControllerCount < 1) {
-            infoCanvas.SetActive(false);
-        }
-    }
-
     // Event listener, for when the object is selected
     private void OnSelectEntered(SelectEnterEventArgs args) {
         // Get the interactor that selected the object
@@ -109,7 +81,5 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
     // Function for cleaning up listeners, should the object be destroyed
     private void OnDestroy() {
         grabInteractable.selectEntered.RemoveListener(OnSelectEntered);
-        grabInteractable.hoverEntered.RemoveListener(OnHoverEntered);
-        grabInteractable.hoverExited.RemoveListener(OnHoverExited);
     }
 }
