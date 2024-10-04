@@ -9,7 +9,7 @@ public class FacePlayer : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     { 
-        lookAtPlayer = GameObject.Find("Main Camera").transform;      
+        lookAtPlayer = GameObject.Find("Camera").transform;      
     }
 
     // Update is called once per frame

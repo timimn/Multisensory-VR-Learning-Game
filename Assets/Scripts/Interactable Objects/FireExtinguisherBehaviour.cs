@@ -22,7 +22,7 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
     void Start() {
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-        gameCamera = GameObject.Find("Main Camera").transform;
+        gameCamera = GameObject.Find("Camera").transform;
         handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
         grabInteractable = this.gameObject.GetComponent<XRGrabInteractable>();
         foamParticleSystem = this.gameObject.GetComponentInChildren<ParticleSystem>();

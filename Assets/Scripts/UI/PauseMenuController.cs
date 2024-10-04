@@ -21,7 +21,7 @@ public class PauseMenuController : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        gameCamera = GameObject.Find("Main Camera").transform;
+        gameCamera = GameObject.Find("Camera").transform;
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         offsetZ = pauseMenu.transform.localPosition.z;
         pauseMenu.SetActive(false);

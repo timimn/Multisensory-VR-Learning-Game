@@ -8,7 +8,7 @@ public class SafetyNetTriggerEvent : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        gameCamera = GameObject.Find("Main Camera").transform;
+        gameCamera = GameObject.Find("Camera").transform;
     }
 
     // Event listener for when the trigger is entered
