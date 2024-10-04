@@ -16,7 +16,6 @@ public class FireExtinguisherPinBehaviour : MonoBehaviour {
 
     // Event listener, for when the object is selected
     private void OnSelectEntered(SelectEnterEventArgs args) {
-        Debug.Log("PIN SELECTED");
         Destroy(joint);
     }
 

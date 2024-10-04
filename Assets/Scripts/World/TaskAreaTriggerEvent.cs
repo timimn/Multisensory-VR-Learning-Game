@@ -14,6 +14,7 @@ public class TaskAreaTriggerEvent : MonoBehaviour {
 
     // Event listener for when the trigger is entered
     private void OnTriggerEnter(Collider other) {
+        // Implement different functionality based on trigger name
         if (triggerName == "EntranceTrigger" && notTriggeredEntrance && other.CompareTag("Player")) {
             handMenuController.ProgressTask(1);
             notTriggeredEntrance = false;

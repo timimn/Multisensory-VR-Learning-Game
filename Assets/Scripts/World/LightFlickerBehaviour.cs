@@ -19,8 +19,10 @@ public class FireLightBehaviour : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        // Adjust the light intensity, using interpolation
         theLight.intensity = Mathf.Lerp(theLight.intensity, targetIntensity, flickerSpeed);
 
+        // If the intensity of the light is close to its target intensity, set a new target intensity
         if (Mathf.Abs(theLight.intensity - targetIntensity) < 0.01f) {
             targetIntensity = Random.Range(minIntensity, maxIntensity);
         }
