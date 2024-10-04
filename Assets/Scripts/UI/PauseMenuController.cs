@@ -8,6 +8,8 @@ public class PauseMenuController : MonoBehaviour {
     
     private Transform gameCamera;
     private InputDevice leftController;
+    private GameObject pausePanel;
+    private GameObject settingsPanel;
     private float offsetZ;
     private bool menuVisible = false;
     private bool previousButtonState = false;
@@ -23,7 +25,10 @@ public class PauseMenuController : MonoBehaviour {
     void Start() {
         gameCamera = GameObject.Find("Camera").transform;
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        pausePanel = GameObject.Find("XR Origin (XR Rig)/Camera Offset/PauseMenuCanvas/PauseMenu");
+        settingsPanel = GameObject.Find("XR Origin (XR Rig)/Camera Offset/PauseMenuCanvas/SettingsMenu");
         offsetZ = pauseMenu.transform.localPosition.z;
+        settingsPanel.SetActive(false);
         pauseMenu.SetActive(false);
     }
 
@@ -39,6 +44,8 @@ public class PauseMenuController : MonoBehaviour {
         // Toggle the menu only when the state of the left menu button changes
         if (menuButtonPressed && !previousButtonState) {
             menuVisible = !menuVisible;
+            pausePanel.SetActive(true);
+            settingsPanel.SetActive(false);
             pauseMenu.SetActive(menuVisible);
 
             // Enable / disable teleporting
@@ -93,6 +100,12 @@ public class PauseMenuController : MonoBehaviour {
         Time.timeScale = 1f;
     }
 
+    // Callback function for the back button
+    public void GameSettingsCallback() {
+        pausePanel.SetActive(false);
+        settingsPanel.SetActive(true);
+    }
+
     // Callback function for the quit button
     public void GameQuitCallback() {
         Application.Quit();
@@ -101,6 +114,12 @@ public class PauseMenuController : MonoBehaviour {
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #endif
+    }
+
+    // Callback function for the back button
+    public void GameBackCallback() {
+        settingsPanel.SetActive(false);
+        pausePanel.SetActive(true);
     }
 
     // Function to correctly position the menu, depending on the position of the camera

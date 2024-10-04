@@ -8,15 +8,16 @@ using TMPro;
 public class FireExtinguisherBehaviour : MonoBehaviour {
     public XRBaseInteractor leftControllerInteractor;
     public XRBaseInteractor rightControllerInteractor;
+    public ParticleSystem foamParticleSystem;
     
     private InputDevice leftController;
     private InputDevice rightController;
     private Transform gameCamera;
     private HandMenuController handMenuController;
     private XRGrabInteractable grabInteractable;
-    private ParticleSystem foamParticleSystem;
     private GameObject infoCanvas;
     private bool rightControllerGrabbing = true;
+    private bool pinRemoved = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -25,7 +26,6 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
         gameCamera = GameObject.Find("Camera").transform;
         handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
         grabInteractable = this.gameObject.GetComponent<XRGrabInteractable>();
-        foamParticleSystem = this.gameObject.GetComponentInChildren<ParticleSystem>();
         infoCanvas = this.gameObject.GetComponentInChildren<Canvas>().gameObject;
         grabInteractable.selectEntered.AddListener(OnSelectEntered);
     }
@@ -53,7 +53,7 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
             }
 
             // If the corresponding trigger is held, activate the particle system, otherwise deactivate it
-            if (triggerPressed) {
+            if (pinRemoved && triggerPressed) {
                 if (!foamParticleSystem.isPlaying) foamParticleSystem.Play();
             } else {
                 if (foamParticleSystem.isPlaying) foamParticleSystem.Stop();
@@ -76,6 +76,13 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
         }
         infoCanvas.SetActive(false);
         handMenuController.ProgressTask(0);  // Complete a demonstration task
+    }
+
+    // Event listener, for when the collider stops colliding with another
+    private void OnCollisionExit(Collision collision) {
+        if (collision.gameObject.name == "Fire_Extinguisher_Pin") {
+            pinRemoved = true;
+        }
     }
 
     // Function for cleaning up listeners, should the object be destroyed

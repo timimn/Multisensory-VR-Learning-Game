@@ -20,11 +20,11 @@ public class InteractionPromptController : MonoBehaviour {
     [SerializeField]
     private float canvasOffsetX = 0f;
     [SerializeField]
-    private float canvasOffsetY = 1.8f;
+    private float canvasOffsetY = 0f;
     [SerializeField]
     private float canvasOffsetZ = 0f;
     [SerializeField]
-    private float canvasDistance = 0.5f;
+    private float canvasDistance = 0f;
 
     // Start is called before the first frame update
     void Start() {
