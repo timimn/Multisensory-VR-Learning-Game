@@ -14,12 +14,23 @@ public class TaskAreaTriggerEvent : MonoBehaviour {
 
     // Event listener for when the trigger is entered
     private void OnTriggerEnter(Collider other) {
-        // Implement different functionality based on trigger name
-        if (triggerName == "EntranceTrigger" && notTriggeredEntrance && other.CompareTag("Player")) {
-            handMenuController.ProgressTask(1);
+        if (other.CompareTag("Player")) {
+            // Handle each functionality seperately
+            HandleEntranceTrigger();
+            HandleEntranceTrigger2();
+        }
+    }
+
+    private void HandleEntranceTrigger() {
+        if (triggerName == "EntranceTrigger" && handMenuController.TaskAvailable(1) && notTriggeredEntrance) {
+            handMenuController.ProgressTask(1, 0);
             notTriggeredEntrance = false;
-        } else if (triggerName == "EntranceTrigger2" && notTriggeredEntrance2 && other.CompareTag("Player")) {
-            handMenuController.ProgressTask(1);
+        }
+    }
+
+    private void HandleEntranceTrigger2() {
+        if (triggerName == "EntranceTrigger2" && handMenuController.TaskAvailable(1) && notTriggeredEntrance2) {
+            handMenuController.ProgressTask(1, 0);
             notTriggeredEntrance2 = false;
         }
     }

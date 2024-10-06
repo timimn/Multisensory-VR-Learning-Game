@@ -25,8 +25,8 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
         rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
         gameCamera = GameObject.Find("Camera").transform;
         handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
-        grabInteractable = this.gameObject.GetComponent<XRGrabInteractable>();
-        infoCanvas = this.gameObject.GetComponentInChildren<Canvas>().gameObject;
+        grabInteractable = this.GetComponent<XRGrabInteractable>();
+        infoCanvas = this.GetComponentInChildren<Canvas>().gameObject;
         grabInteractable.selectEntered.AddListener(OnSelectEntered);
     }
 
@@ -75,7 +75,7 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
             rightControllerGrabbing = false;
         }
         infoCanvas.SetActive(false);
-        handMenuController.ProgressTask(0);  // Complete a demonstration task
+        handMenuController.ProgressTask(0, 0);  // Complete a demonstration task
     }
 
     // Event listener, for when the collider stops colliding with another

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class LightToggleController : MonoBehaviour {
     public void ToggleLights() {

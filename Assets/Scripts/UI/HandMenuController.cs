@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -13,16 +14,21 @@ public class HandMenuController : MonoBehaviour {
     private TextMeshProUGUI taskText;
     private CanvasGroup canvasGroup;
     private bool fadeActive = false;
+    private int currentTaskIndex = 0;
 
     [SerializeField]
     private const float fadeSpeed = 2.5f;
 
     // Initialize the tasks using the custom Task class
     private List<Task> tasks = new List<Task> {
-        new Task("Pick up the fire extinguisher."),
-        new Task("Visit both entrances of the building.", 2),
-        new Task("Activate the flashlight."),
-        new Task("Discover the keys to the universe.")
+        new Task("Familiarize yourself with equipment.", new List<Subtask> {
+            new Subtask("Pick up the fire extinguisher."),
+            new Subtask("Activate the flashlight.")
+        }),
+        new Task("Explore the environment.", new List<Subtask> {
+            new Subtask("Visit both entrances of the building.", 2)
+        }),
+        new Task("This is a placeholder task.")
     };
     
     // Start is called before the first frame update
@@ -64,28 +70,66 @@ public class HandMenuController : MonoBehaviour {
     public void UpdateTasks() {
         taskText.text = "Tasks:\n";
 
-        foreach (Task task in tasks) {
+        // Display any previously completed tasks
+        for (int i = 0; i < currentTaskIndex; i++) {
+            Task task = tasks[i];
+
             if (task.completed) {
-                taskText.text += $"- <color=green>{task.name}{(task.subtasksTarget > 1 ? $" ({task.subtasksTarget}/{task.subtasksTarget})" : "")}</color>\n";
-            } else if (task.subtasksCompleted > 0) {
-                taskText.text += $"- <color=yellow>{task.name} ({task.subtasksCompleted}/{task.subtasksTarget})</color>\n";
+                taskText.text += $"> <color=green>{task.name}</color>\n";
+            }
+        }
+
+        // Display the currently active task
+        if (currentTaskIndex < tasks.Count) {
+            Task task = tasks[currentTaskIndex];
+
+            if (task.completed) {
+                taskText.text += $"> <color=green>{task.name}</color>\n";
             } else {
-                taskText.text += $"- {task.name}{(task.subtasksTarget > 1 ? $" ({task.subtasksCompleted}/{task.subtasksTarget})" : "")}\n";
+                string taskColor = (task.SubtasksPartlyCompleted()) ? "yellow" : "white";
+                taskText.text += $"> <color={taskColor}>{task.name}</color>\n";
+
+                // If the task consists of subtasks, display them as well
+                if (task.subtasks != null) {
+                    foreach (Subtask subtask in task.subtasks) {
+                        string subtaskColor = subtask.completed ? "green" : (subtask.partsCompleted > 0 ? "yellow" : "white");
+                        int formattedPartsCompleted = Math.Min(subtask.partsCompleted, subtask.parts);
+                        string progress = subtask.parts > 1 ? $" ({formattedPartsCompleted}/{subtask.parts})" : "";
+                        taskText.text += $"  - <color={subtaskColor}>{subtask.name}{progress}</color>\n";
+                    }
+                }
             }
         }
     }
 
     // Function for progressing a task based on its index
-    public void ProgressTask(int index) {
-        if (index >= 0 && index < tasks.Count) {
+    public void ProgressTask(int index, int subtaskIndex = -1) {
+        // Only progress the task if it is active
+        if (index == currentTaskIndex) {
             Task task = tasks[index];
-            task.subtasksCompleted++;
 
-            if (task.AllSubtasksCompleted()) {
+            // If the task consists of subtasks, progress them first, otherwise just complete the task
+            if (subtaskIndex > -1 && subtaskIndex < task.subtasks?.Count) {
+                Subtask subtask = task.subtasks[subtaskIndex];
+                subtask.partsCompleted++;
+
+                if (subtask.AllPartsCompleted()) subtask.completed = true;
+
+                if (task.AllSubtasksCompleted()) {
+                    task.completed = true;
+                    if (currentTaskIndex + 1 < tasks.Count) currentTaskIndex++;
+                }
+            } else {
                 task.completed = true;
+                if (currentTaskIndex + 1 < tasks.Count) currentTaskIndex++;
             }
-            UpdateTasks();
+            UpdateTasks();  // Display updated information on the task list
         }
+    }
+
+    // Function for checking if a task is available
+    public bool TaskAvailable(int index) {
+        return index == currentTaskIndex;
     }
 
     // Coroutine for handling the menu fading in

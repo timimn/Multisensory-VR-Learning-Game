@@ -30,9 +30,9 @@ public class InteractionPromptController : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         gameCamera = GameObject.Find("Camera").transform;
-        grabInteractable = this.gameObject.GetComponent<XRGrabInteractable>();
-        objectCollider = this.gameObject.GetComponent<Collider>();
-        infoCanvas = this.gameObject.GetComponentInChildren<Canvas>().gameObject;
+        grabInteractable = this.GetComponent<XRGrabInteractable>();
+        objectCollider = this.GetComponent<Collider>();
+        infoCanvas = this.GetComponentInChildren<Canvas>().gameObject;
         infoText = infoCanvas.GetComponentInChildren<TextMeshProUGUI>();
         grabInteractable.hoverEntered.AddListener(OnHoverEntered);
         grabInteractable.hoverExited.AddListener(OnHoverExited);

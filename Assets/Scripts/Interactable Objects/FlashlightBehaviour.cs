@@ -25,9 +25,9 @@ public class FlashlightBehaviour : MonoBehaviour {
         rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
         gameCamera = GameObject.Find("Camera").transform;
         handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
-        grabInteractable = this.gameObject.GetComponent<XRGrabInteractable>();
-        flashLight = this.gameObject.GetComponentInChildren<Light>();
-        infoCanvas = this.gameObject.GetComponentInChildren<Canvas>().gameObject;
+        grabInteractable = this.GetComponent<XRGrabInteractable>();
+        flashLight = this.GetComponentInChildren<Light>();
+        infoCanvas = this.GetComponentInChildren<Canvas>().gameObject;
         grabInteractable.selectEntered.AddListener(OnSelectEntered);
     }
 
@@ -54,7 +54,7 @@ public class FlashlightBehaviour : MonoBehaviour {
             }
 
             if (notYetGrabbed && triggerPressed) {
-                handMenuController.ProgressTask(2);
+                handMenuController.ProgressTask(0, 1);
                 notYetGrabbed = false;
             }
             flashLight.enabled = triggerPressed; // If the corresponding trigger is held, activate the light, otherwise deactivate it
