@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2101890700819173016
+--- !u!114 &-8878121009484727585
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31,7 +31,6 @@ Material:
   m_InvalidKeywords:
   - _EMISSIVE_COLOR_MAP
   - _MASKMAP
-  - _METALLICGLOSSMAP
   - _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 1
