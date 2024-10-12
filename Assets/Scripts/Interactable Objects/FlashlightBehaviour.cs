@@ -18,6 +18,7 @@ public class FlashlightBehaviour : MonoBehaviour {
     private GameObject infoCanvas;
     private bool rightControllerGrabbing = true;
     private bool notYetGrabbed = true;
+    private bool previousTriggerState = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -52,14 +53,17 @@ public class FlashlightBehaviour : MonoBehaviour {
             } else {
                 triggerPressed = leftController.TryGetFeatureValue(CommonUsages.trigger, out triggerValue) && triggerValue > 0.5f;
             }
+            
+            // Toggle the flashlight only when the state of the left trigger changes
+            if (triggerPressed && !previousTriggerState) {
+                flashLight.enabled = !flashLight.enabled;
 
-            if (notYetGrabbed && triggerPressed) {
-                handMenuController.ProgressTask(0, 1);
-                notYetGrabbed = false;
+                if (notYetGrabbed) {
+                    handMenuController.ProgressTask(0, 1);
+                    notYetGrabbed = false;
+                }
             }
-            flashLight.enabled = triggerPressed; // If the corresponding trigger is held, activate the light, otherwise deactivate it
-        } else if (flashLight.enabled) {
-            flashLight.enabled = false;
+            previousTriggerState = triggerPressed;
         }
     }
 
