@@ -75,7 +75,6 @@ public class FireExtinguisherBehaviour : MonoBehaviour {
             rightControllerGrabbing = false;
         }
         infoCanvas.SetActive(false);
-        handMenuController.ProgressTask(0, 0);  // Complete a demonstration task
     }
 
     // Event listener, for when the collider stops colliding with another

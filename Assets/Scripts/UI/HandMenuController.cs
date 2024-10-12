@@ -17,18 +17,24 @@ public class HandMenuController : MonoBehaviour {
     private int currentTaskIndex = 0;
 
     [SerializeField]
-    private const float fadeSpeed = 2.5f;
+    private float fadeSpeed = 2.5f;
 
     // Initialize the tasks using the custom Task class
     private List<Task> tasks = new List<Task> {
-        new Task("Familiarize yourself with equipment.", new List<Subtask> {
-            new Subtask("Pick up the fire extinguisher."),
-            new Subtask("Activate the flashlight.")
+        new Task("Enter classroom X."),
+        new Task("Turn on PC X."),
+        new Task("Open a window."),
+        new Task("Locate a flashlight."),
+        new Task("Turn off running equipment.", new List<Subtask> {
+            new Subtask("Turn off PCs.", 16)
         }),
-        new Task("Explore the environment.", new List<Subtask> {
-            new Subtask("Visit both entrances of the building.", 2)
+        new Task("Wait for the power to come back on for 1 minute."),
+        new Task("Leave the room."),
+        new Task("Look for people in need of assistance.", new List<Subtask> {
+            new Subtask("Check nearby elevators.", 2)
         }),
-        new Task("This is a placeholder task.")
+        new Task("Look around for maintenance staff's phone number."),
+        new Task("Dial the phone number.")
     };
     
     // Start is called before the first frame update

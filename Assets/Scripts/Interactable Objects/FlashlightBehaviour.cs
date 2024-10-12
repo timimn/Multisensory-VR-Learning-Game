@@ -17,7 +17,6 @@ public class FlashlightBehaviour : MonoBehaviour {
     private Light flashLight;
     private GameObject infoCanvas;
     private bool rightControllerGrabbing = true;
-    private bool notYetGrabbed = true;
     private bool previousTriggerState = false;
 
     // Start is called before the first frame update
@@ -57,11 +56,6 @@ public class FlashlightBehaviour : MonoBehaviour {
             // Toggle the flashlight only when the state of the left trigger changes
             if (triggerPressed && !previousTriggerState) {
                 flashLight.enabled = !flashLight.enabled;
-
-                if (notYetGrabbed) {
-                    handMenuController.ProgressTask(0, 1);
-                    notYetGrabbed = false;
-                }
             }
             previousTriggerState = triggerPressed;
         }
@@ -79,6 +73,10 @@ public class FlashlightBehaviour : MonoBehaviour {
             rightControllerGrabbing = false;
         }
         infoCanvas.SetActive(false);
+
+        if (handMenuController.TaskAvailable(3)) {
+            handMenuController.ProgressTask(3);
+        }
     }
 
     // Function for cleaning up listeners, should the object be destroyed

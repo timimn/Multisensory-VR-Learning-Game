@@ -3,8 +3,7 @@ using UnityEngine;
 public class TaskAreaTriggerEvent : MonoBehaviour {
     private HandMenuController handMenuController;
     private string triggerName;
-    private bool notTriggeredEntrance = true;
-    private bool notTriggeredEntrance2 = true;
+    private bool classroomEntered = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -16,22 +15,14 @@ public class TaskAreaTriggerEvent : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")) {
             // Handle each functionality seperately
-            HandleEntranceTrigger();
-            HandleEntranceTrigger2();
+            HandleClassroomEnter();
         }
     }
 
-    private void HandleEntranceTrigger() {
-        if (triggerName == "EntranceTrigger" && handMenuController.TaskAvailable(1) && notTriggeredEntrance) {
-            handMenuController.ProgressTask(1, 0);
-            notTriggeredEntrance = false;
-        }
-    }
-
-    private void HandleEntranceTrigger2() {
-        if (triggerName == "EntranceTrigger2" && handMenuController.TaskAvailable(1) && notTriggeredEntrance2) {
-            handMenuController.ProgressTask(1, 0);
-            notTriggeredEntrance2 = false;
+    private void HandleClassroomEnter() {
+        if (triggerName.Contains("ClassroomTrigger") && handMenuController.TaskAvailable(0) && !classroomEntered) {
+            classroomEntered = true;
+            handMenuController.ProgressTask(0);
         }
     }
 }
