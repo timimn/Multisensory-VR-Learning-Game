@@ -17,7 +17,7 @@ public class SafetyNetTriggerEvent : MonoBehaviour {
         if (other.CompareTag("Player")) {
             other.transform.position = new Vector3(0f, 5f, 0f);
             Debug.Log("Player fell through the map.");
-        } else {
+        } else if (!other.CompareTag("Terrain")) {
             // Teleport objects that have fallen through the ground in front of the player
             other.transform.position = gameCamera.position + gameCamera.forward * teleportDistance;
             Rigidbody rb = other.GetComponent<Rigidbody>();

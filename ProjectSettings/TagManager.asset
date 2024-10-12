@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Anchor
   - Toggleable
+  - Terrain
   layers:
   - Default
   - TransparentFX
