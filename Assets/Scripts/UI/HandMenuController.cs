@@ -23,16 +23,17 @@ public class HandMenuController : MonoBehaviour {
     private List<Task> tasks = new List<Task> {
         new Task("Enter classroom X."),
         new Task("Turn on PC X."),
-        new Task("Open a window."),
+        //new Task("Open a window."),
+        new Task("Get some work done."),
         new Task("Locate a flashlight."),
         new Task("Turn off running equipment.", new List<Subtask> {
-            new Subtask("Turn off PCs.", 16)
+            new Subtask("Turn off PCs.", 9)
         }),
-        new Task("Wait for the power to come back on for 1 minute."),
-        new Task("Leave the room."),
-        new Task("Look for people in need of assistance.", new List<Subtask> {
-            new Subtask("Check nearby elevators.", 2)
-        }),
+        new Task("Wait in the classroom for the power to come back on for 1 minute."),
+        new Task("Leave the classroom."),
+        //new Task("Look for people in need of assistance.", new List<Subtask> {
+        //    new Subtask("Check nearby elevators.", 2)
+        //}),
         new Task("Look around for maintenance staff's phone number."),
         new Task("Dial the phone number.")
     };

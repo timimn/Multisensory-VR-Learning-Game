@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class SwitchBehaviour : MonoBehaviour {
     public Material emissiveMaterial;
@@ -8,7 +10,11 @@ public class SwitchBehaviour : MonoBehaviour {
     private GameObject targetObject;
     private Renderer objRenderer;
     private HandMenuController handMenuController;
+    private LightToggleController lightToggleController;
+    private int switchID;
+    private HashSet<int> switchIDs = new HashSet<int>();
     private bool isEmissive = false;
+    private float elapsedTime = 0f;
     private const int offAngleThreshold = 0;
     private const int onAngleThreshold = -74;
 
@@ -22,7 +28,9 @@ public class SwitchBehaviour : MonoBehaviour {
         joint = this.GetComponentInChildren<HingeJoint>();
         targetObject = this.transform.parent.transform.Find("PC_monitor").gameObject;
         objRenderer = targetObject.GetComponent<Renderer>();
+        switchID = this.gameObject.GetInstanceID();
         handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
+        lightToggleController = this.GetComponent<LightToggleController>();
     }
 
     // Update is called once per frame
@@ -35,6 +43,7 @@ public class SwitchBehaviour : MonoBehaviour {
             if (isEmissive && jointAngle >= offAngleThreshold) {
                 SetMaterial(solidMaterial);
                 isEmissive = false;
+                HandleTask();
             } else if (!isEmissive && jointAngle <= onAngleThreshold) {
                 SetMaterial(emissiveMaterial);
                 isEmissive = true;
@@ -42,6 +51,7 @@ public class SwitchBehaviour : MonoBehaviour {
                 // Complete the second task, if this switch is designated as the correct one
                 if (completesSecondTask && handMenuController.TaskAvailable(1)) {
                     handMenuController.ProgressTask(1);
+                    StartCoroutine(PowerCutCountdown());
                 }
             }
         // Reversed behaviour, when the switch is physically reversed (admittedly lazy, yet efficient)
@@ -49,6 +59,7 @@ public class SwitchBehaviour : MonoBehaviour {
             if (isEmissive && jointAngle <= onAngleThreshold) {
                 SetMaterial(solidMaterial);
                 isEmissive = false;
+                HandleTask();
             } else if (!isEmissive && jointAngle >= offAngleThreshold) {
                 SetMaterial(emissiveMaterial);
                 isEmissive = true;
@@ -61,5 +72,42 @@ public class SwitchBehaviour : MonoBehaviour {
         Material[] materials = objRenderer.materials;
         materials[1] = material;
         objRenderer.materials = materials;
+    }
+
+    // Function for handling the task progression for switches
+    private void HandleTask() {
+        if (!switchIDs.Contains(switchID)) {
+            handMenuController.ProgressTask(4, 0);
+            switchIDs.Add(switchID);
+
+            if (handMenuController.TaskAvailable(4)) {
+                StartCoroutine(WaitingCountdown());
+            }
+        }
+    }
+
+    // Coroutine for handling the power cut countdown
+    private IEnumerator PowerCutCountdown() {
+        elapsedTime = 0f;
+
+        // Wait for 5 seconds before activating the script
+        while (elapsedTime < 5f) {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        lightToggleController.ToggleLights();
+        handMenuController.ProgressTask(2);
+    }
+
+    // Coroutine for handling the waiting countdown
+    private IEnumerator WaitingCountdown() {
+        elapsedTime = 0f;
+
+        // Wait for 1 minute before progressing the task
+        while (elapsedTime < 60f) {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        handMenuController.ProgressTask(5);
     }
 }
