@@ -104,7 +104,7 @@ public class SwitchBehaviour : MonoBehaviour {
         elapsedTime = 0f;
 
         // Wait for 1 minute before progressing the task
-        while (elapsedTime < 60f) {
+        while (elapsedTime < 90f) {
             elapsedTime += Time.deltaTime;
             yield return null;
         }
