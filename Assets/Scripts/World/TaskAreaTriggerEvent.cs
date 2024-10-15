@@ -5,6 +5,8 @@ public class TaskAreaTriggerEvent : MonoBehaviour {
     private string triggerName;
     private bool classroomEntered = false;
     private bool classroomExited = false;
+    private bool maintenanceFound = false;
+
 
     // Start is called before the first frame update
     void Start() {
@@ -18,6 +20,7 @@ public class TaskAreaTriggerEvent : MonoBehaviour {
             // Handle each functionality seperately
             HandleClassroomEnter();
             HandleClassroomExit();
+            HandleFoundMaintenance();
         }
     }
 
@@ -32,6 +35,13 @@ public class TaskAreaTriggerEvent : MonoBehaviour {
         if (triggerName.Contains("ClassroomExitTrigger") && handMenuController.TaskAvailable(6) && !classroomExited) {
             classroomExited = true;
             handMenuController.ProgressTask(6);
+        }
+    }
+
+    private void HandleFoundMaintenance() {
+        if (triggerName.Contains("MaintenanceFoundTrigger") && handMenuController.TaskAvailable(7) && !maintenanceFound) {
+            maintenanceFound = true;
+            handMenuController.ProgressTask(7);
         }
     }
 }
