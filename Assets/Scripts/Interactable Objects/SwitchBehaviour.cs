@@ -5,14 +5,14 @@ using System.Collections.Generic;
 public class SwitchBehaviour : MonoBehaviour {
     public Material emissiveMaterial;
     public Material solidMaterial;
-
+    
     private HingeJoint joint;
     private GameObject targetObject;
     private Renderer objRenderer;
     private HandMenuController handMenuController;
     private LightToggleController lightToggleController;
     private int switchID;
-    private HashSet<int> switchIDs = new HashSet<int>();
+    private static HashSet<int> switchIDs = new HashSet<int>();
     private bool isEmissive = false;
     private float elapsedTime = 0f;
     private const int offAngleThreshold = 0;
@@ -29,6 +29,7 @@ public class SwitchBehaviour : MonoBehaviour {
         targetObject = this.transform.parent.transform.Find("PC_monitor").gameObject;
         objRenderer = targetObject.GetComponent<Renderer>();
         switchID = this.gameObject.GetInstanceID();
+        if (!reversed && !completesSecondTask) switchIDs.Add(switchID); 
         handMenuController = GameObject.Find("XR Origin (XR Rig)/Camera Offset/Left Controller").GetComponent<HandMenuController>();
         lightToggleController = this.GetComponent<LightToggleController>();
     }
@@ -43,10 +44,11 @@ public class SwitchBehaviour : MonoBehaviour {
             if (isEmissive && jointAngle >= offAngleThreshold) {
                 SetMaterial(solidMaterial);
                 isEmissive = false;
-                HandleTask();
+                HandleTaskProgression();
             } else if (!isEmissive && jointAngle <= onAngleThreshold) {
                 SetMaterial(emissiveMaterial);
                 isEmissive = true;
+                HandleTaskReversion();
 
                 // Complete the second task, if this switch is designated as the correct one
                 if (completesSecondTask && handMenuController.TaskAvailable(1)) {
@@ -59,10 +61,11 @@ public class SwitchBehaviour : MonoBehaviour {
             if (isEmissive && jointAngle <= onAngleThreshold) {
                 SetMaterial(solidMaterial);
                 isEmissive = false;
-                HandleTask();
+                HandleTaskProgression();
             } else if (!isEmissive && jointAngle >= offAngleThreshold) {
                 SetMaterial(emissiveMaterial);
                 isEmissive = true;
+                HandleTaskReversion();
             }
         }
     }
@@ -75,14 +78,22 @@ public class SwitchBehaviour : MonoBehaviour {
     }
 
     // Function for handling the task progression for switches
-    private void HandleTask() {
+    private void HandleTaskProgression() {
         if (!switchIDs.Contains(switchID)) {
             handMenuController.ProgressTask(4, 0);
             switchIDs.Add(switchID);
 
-            if (handMenuController.TaskAvailable(4)) {
+            if (handMenuController.TaskAvailable(5)) {
                 StartCoroutine(WaitingCountdown());
             }
+        }
+    }
+
+    // Function for handling the task reversion for switches
+    private void HandleTaskReversion() {
+        if (switchIDs.Contains(switchID)) {
+            handMenuController.RevertTask(4, 0);
+            switchIDs.Remove(switchID);
         }
     }
 
@@ -104,7 +115,7 @@ public class SwitchBehaviour : MonoBehaviour {
         elapsedTime = 0f;
 
         // Wait for 1 minute before progressing the task
-        while (elapsedTime < 90f) {
+        while (elapsedTime < 60f) {
             elapsedTime += Time.deltaTime;
             yield return null;
         }

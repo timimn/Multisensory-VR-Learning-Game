@@ -111,27 +111,42 @@ public class HandMenuController : MonoBehaviour {
 
     // Function for progressing a task based on its index
     public void ProgressTask(int index, int subtaskIndex = -1) {
-        // Only progress the task if it is active
-        if (index == currentTaskIndex) {
-            Task task = tasks[index];
+        Task task = tasks[index];
 
-            // If the task consists of subtasks, progress them first, otherwise just complete the task
-            if (subtaskIndex > -1 && subtaskIndex < task.subtasks?.Count) {
-                Subtask subtask = task.subtasks[subtaskIndex];
-                subtask.partsCompleted++;
+        // If the task consists of subtasks, progress them first, otherwise just complete the task
+        if (subtaskIndex > -1 && subtaskIndex < task.subtasks?.Count) {
+            Subtask subtask = task.subtasks[subtaskIndex];
+            subtask.partsCompleted++;
 
-                if (subtask.AllPartsCompleted()) subtask.completed = true;
+            if (subtask.AllPartsCompleted()) subtask.completed = true;
 
-                if (task.AllSubtasksCompleted()) {
-                    task.completed = true;
-                    if (currentTaskIndex + 1 < tasks.Count) currentTaskIndex++;
-                }
-            } else {
+            if (task.AllSubtasksCompleted()) {
                 task.completed = true;
                 if (currentTaskIndex + 1 < tasks.Count) currentTaskIndex++;
             }
-            UpdateTasks();  // Display updated information on the task list
+        } else {
+            task.completed = true;
+            if (currentTaskIndex + 1 < tasks.Count) currentTaskIndex++;
         }
+        UpdateTasks();  // Display updated information on the task list
+    }
+
+    // Function for reverting a task based on its index
+    public void RevertTask(int index, int subtaskIndex) {
+        Task task = tasks[index];
+
+        // Only revert the given subtask
+        if (subtaskIndex > -1 && subtaskIndex < task.subtasks?.Count) {
+            Subtask subtask = task.subtasks[subtaskIndex];
+            
+            // If the number of completed parts would go negative, increase the total parts instead
+            if (subtask.partsCompleted - 1 < 0) {
+                subtask.SetParts(subtask.parts + 1);
+            } else {
+                subtask.partsCompleted--;
+            }
+        }
+        UpdateTasks();
     }
 
     // Function for checking if a task is available

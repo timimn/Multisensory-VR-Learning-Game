@@ -45,5 +45,10 @@ namespace Game.Task {
         public bool AllPartsCompleted() {
             return this.partsCompleted == this.parts;
         }
+
+        // Method for setting the number of parts of the subtask
+        public void SetParts(int newParts) {
+            this.parts = newParts;
+        }
     }
 }
