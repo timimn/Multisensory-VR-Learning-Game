@@ -22,8 +22,8 @@ public class HandMenuController : MonoBehaviour {
     // Initialize the tasks using the custom Task class
     private List<Task> tasks = new List<Task> {
         new Task("Enter classroom 202."),
+        new Task("Open a window."),
         new Task("Turn on PC 1."),
-        //new Task("Open a window."),
         new Task("Get some work done."),
         new Task("Locate a flashlight."),
         new Task("Turn off running equipment.", new List<Subtask> {

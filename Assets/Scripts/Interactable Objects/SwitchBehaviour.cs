@@ -51,8 +51,8 @@ public class SwitchBehaviour : MonoBehaviour {
                 HandleTaskReversion();
 
                 // Complete the second task, if this switch is designated as the correct one
-                if (completesSecondTask && handMenuController.TaskAvailable(1)) {
-                    handMenuController.ProgressTask(1);
+                if (completesSecondTask && handMenuController.TaskAvailable(2)) {
+                    handMenuController.ProgressTask(2);
                     StartCoroutine(PowerCutCountdown());
                 }
             }
@@ -80,10 +80,10 @@ public class SwitchBehaviour : MonoBehaviour {
     // Function for handling the task progression for switches
     private void HandleTaskProgression() {
         if (!switchIDs.Contains(switchID)) {
-            handMenuController.ProgressTask(4, 0);
+            handMenuController.ProgressTask(5, 0);
             switchIDs.Add(switchID);
 
-            if (handMenuController.TaskAvailable(5)) {
+            if (handMenuController.TaskAvailable(6)) {
                 StartCoroutine(WaitingCountdown());
             }
         }
@@ -107,7 +107,7 @@ public class SwitchBehaviour : MonoBehaviour {
             yield return null;
         }
         lightToggleController.ToggleLights();
-        handMenuController.ProgressTask(2);
+        handMenuController.ProgressTask(3);
     }
 
     // Coroutine for handling the waiting countdown
@@ -119,6 +119,6 @@ public class SwitchBehaviour : MonoBehaviour {
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        handMenuController.ProgressTask(5);
+        handMenuController.ProgressTask(6);
     }
 }

@@ -32,16 +32,16 @@ public class TaskAreaTriggerEvent : MonoBehaviour {
     }
 
     private void HandleClassroomExit() {
-        if (triggerName.Contains("ClassroomExitTrigger") && handMenuController.TaskAvailable(6) && !classroomExited) {
+        if (triggerName.Contains("ClassroomExitTrigger") && handMenuController.TaskAvailable(7) && !classroomExited) {
             classroomExited = true;
-            handMenuController.ProgressTask(6);
+            handMenuController.ProgressTask(7);
         }
     }
 
     private void HandleFoundMaintenance() {
-        if (triggerName.Contains("MaintenanceFoundTrigger") && handMenuController.TaskAvailable(7) && !maintenanceFound) {
+        if (triggerName.Contains("MaintenanceFoundTrigger") && handMenuController.TaskAvailable(8) && !maintenanceFound) {
             maintenanceFound = true;
-            handMenuController.ProgressTask(7);
+            handMenuController.ProgressTask(8);
         }
     }
 }
