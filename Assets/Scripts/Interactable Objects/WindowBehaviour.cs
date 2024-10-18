@@ -8,7 +8,7 @@ public class WindowBehaviour : MonoBehaviour {
     private HandMenuController handMenuController;
     private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabInteractable;
     private GameObject infoCanvas;
-    private bool isTaskCompleted = false;
+    private static bool isTaskCompleted = false;
 
     private Quaternion initialRotation;
 
@@ -32,7 +32,10 @@ public class WindowBehaviour : MonoBehaviour {
     // Complete the task
     private void CompleteTask() {
         isTaskCompleted = true;
-        handMenuController.ProgressTask(1);
+
+        if (handMenuController.TaskAvailable(1)) {
+            handMenuController.ProgressTask(1);
+        }
     }
 
     // Doesn't revert completed task if the user closes the window. Can be implemented later.

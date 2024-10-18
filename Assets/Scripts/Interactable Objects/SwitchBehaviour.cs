@@ -92,7 +92,7 @@ public class SwitchBehaviour : MonoBehaviour {
     // Function for handling the task reversion for switches
     private void HandleTaskReversion() {
         if (switchIDs.Contains(switchID)) {
-            handMenuController.RevertTask(4, 0);
+            handMenuController.RevertTask(5, 0);
             switchIDs.Remove(switchID);
         }
     }
