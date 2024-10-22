@@ -74,7 +74,7 @@ public class FlashlightBehaviour : MonoBehaviour {
         }
         infoCanvas.SetActive(false);
 
-        if (handMenuController.TaskAvailable(4)) {
+        if (handMenuController.TaskAvailable(4, 1)) {
             handMenuController.ProgressTask(4);
         }
     }

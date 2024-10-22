@@ -38,6 +38,12 @@ public class SwitchBehaviour : MonoBehaviour {
     void Update() {
         float jointAngle = joint.angle;
 
+        // Complete the second task, if this switch is designated as the correct one
+        if (isEmissive && completesSecondTask && handMenuController.TaskAvailable(2, 1)) {
+            handMenuController.ProgressTask(2);
+            StartCoroutine(PowerCutCountdown());
+        }
+
         // Normal behaviour, when the switch is right side up
         if (!reversed) {
             // Toggle the emissive material, when each threshold is exceeded
@@ -49,12 +55,6 @@ public class SwitchBehaviour : MonoBehaviour {
                 SetMaterial(emissiveMaterial);
                 isEmissive = true;
                 HandleTaskReversion();
-
-                // Complete the second task, if this switch is designated as the correct one
-                if (completesSecondTask && handMenuController.TaskAvailable(2)) {
-                    handMenuController.ProgressTask(2);
-                    StartCoroutine(PowerCutCountdown());
-                }
             }
         // Reversed behaviour, when the switch is physically reversed (admittedly lazy, yet efficient)
         } else {
@@ -83,7 +83,7 @@ public class SwitchBehaviour : MonoBehaviour {
             handMenuController.ProgressTask(5, 0);
             switchIDs.Add(switchID);
 
-            if (handMenuController.TaskAvailable(6)) {
+            if (handMenuController.TaskAvailable(6, 1)) {
                 StartCoroutine(WaitingCountdown());
             }
         }

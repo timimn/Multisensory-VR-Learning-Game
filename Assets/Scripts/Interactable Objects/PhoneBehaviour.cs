@@ -52,9 +52,9 @@ public class PhoneBehaviour : MonoBehaviour {
             
             // When a trigger is pressed, the task of calling maintenance is completed
             if (triggerPressed) {
-                if (handMenuController.TaskAvailable(9)) {
-                        handMenuController.ProgressTask(9);
-                        // TODO: A ringing sound could be useful here
+                if (handMenuController.TaskAvailable(9, 1)) {
+                    handMenuController.ProgressTask(9);
+                    // TODO: A ringing sound could be useful here
                 }
             }
         }

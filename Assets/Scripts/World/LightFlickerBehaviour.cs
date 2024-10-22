@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FireLightBehaviour : MonoBehaviour {
+public class LightFlickerBehaviour : MonoBehaviour {
     private Light theLight;
     private float targetIntensity;
     
@@ -19,11 +19,15 @@ public class FireLightBehaviour : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        // Adjust the light intensity, using interpolation
-        theLight.intensity = Mathf.Lerp(theLight.intensity, targetIntensity, flickerSpeed);
+        // Modify intensity based on the scale of the parent object
+        float parentScaleAverage = (transform.parent.localScale.x + transform.parent.localScale.y + transform.parent.localScale.z) / maxIntensity;
+        float scaledIntensity = Mathf.Clamp(parentScaleAverage, 0.1f, 10f);
 
-        // If the intensity of the light is close to its target intensity, set a new target intensity
-        if (Mathf.Abs(theLight.intensity - targetIntensity) < 0.01f) {
+        // Adjust the light intensity, using interpolation
+        theLight.intensity = Mathf.Lerp(theLight.intensity, targetIntensity * scaledIntensity, flickerSpeed);
+
+        // If the light intensity is close to the target intensity (scaled), set a new target intensity
+        if (Mathf.Abs(theLight.intensity - (targetIntensity * scaledIntensity)) < 0.01f) {
             targetIntensity = Random.Range(minIntensity, maxIntensity);
         }
     }

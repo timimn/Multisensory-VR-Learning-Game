@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,28 +16,49 @@ public class HandMenuController : MonoBehaviour {
     private CanvasGroup canvasGroup;
     private bool fadeActive = false;
     private int currentTaskIndex = 0;
+    private int currentSceneIndex = 1;
 
     [SerializeField]
     private float fadeSpeed = 2.5f;
 
     // Initialize the tasks using the custom Task class
-    private List<Task> tasks = new List<Task> {
-        new Task("Enter classroom 202."),
-        new Task("Open a window."),
-        new Task("Turn on PC 1."),
-        new Task("Get some work done."),
-        new Task("Locate a flashlight."),
-        new Task("Turn off running equipment.", new List<Subtask> {
-            new Subtask("Turn off PCs.", 9)
-        }),
-        new Task("Wait in the classroom for the power to come back on for 1 minute."),
-        new Task("Leave the classroom."),
-        //new Task("Look for people in need of assistance.", new List<Subtask> {
-        //    new Subtask("Check nearby elevators.", 2)
-        //}),
-        new Task("Look around for maintenance staff's phone number."),
-        new Task("Dial the phone number.")
+    private Dictionary<int, List<Task>> tasks = new Dictionary<int, List<Task>> {
+        {
+            1, new List<Task> {
+                new Task("Enter classroom 202."),
+                new Task("Open a window."),
+                new Task("Turn on PC 1."),
+                new Task("Get some work done."),
+                new Task("Locate a flashlight."),
+                new Task("Turn off running equipment.", new List<Subtask> {
+                    new Subtask("Turn off PCs.", 9)
+                }),
+                new Task("Wait in the classroom for the power to come back on for 1 minute."),
+                new Task("Leave the classroom."),
+                //new Task("Look for people in need of assistance.", new List<Subtask> {
+                //    new Subtask("Check nearby elevators.", 2)
+                //}),
+                new Task("Look around for maintenance staff's phone number."),
+                new Task("Dial the phone number.")
+            }
+        },
+        {
+            2, new List<Task> {
+                new Task("Fire response placeholder task."),
+            }
+        },
+        {
+            3, new List<Task> {
+                new Task("Gas hazard placeholder task."),
+            }
+        }
     };
+
+    // Awake is called when an enabled script instance is being loaded
+    void Awake() {
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log($"Loaded scene {currentSceneIndex}.");
+    }
     
     // Start is called before the first frame update
     void Start() {
@@ -79,7 +101,7 @@ public class HandMenuController : MonoBehaviour {
 
         // Display any previously completed tasks
         for (int i = 0; i < currentTaskIndex; i++) {
-            Task task = tasks[i];
+            Task task = tasks[currentSceneIndex][i];
 
             if (task.completed) {
                 taskText.text += $"> <color=green>{task.name}</color>\n";
@@ -87,8 +109,8 @@ public class HandMenuController : MonoBehaviour {
         }
 
         // Display the currently active task
-        if (currentTaskIndex < tasks.Count) {
-            Task task = tasks[currentTaskIndex];
+        if (currentTaskIndex < tasks[currentSceneIndex].Count) {
+            Task task = tasks[currentSceneIndex][currentTaskIndex];
 
             if (task.completed) {
                 taskText.text += $"> <color=green>{task.name}</color>\n";
@@ -111,7 +133,7 @@ public class HandMenuController : MonoBehaviour {
 
     // Function for progressing a task based on its index
     public void ProgressTask(int index, int subtaskIndex = -1) {
-        Task task = tasks[index];
+        Task task = tasks[currentSceneIndex][index];
 
         // If the task consists of subtasks, progress them first, otherwise just complete the task
         if (subtaskIndex > -1 && subtaskIndex < task.subtasks?.Count) {
@@ -122,18 +144,18 @@ public class HandMenuController : MonoBehaviour {
 
             if (task.AllSubtasksCompleted()) {
                 task.completed = true;
-                if (currentTaskIndex + 1 < tasks.Count) currentTaskIndex++;
+                if (currentTaskIndex + 1 < tasks[currentSceneIndex].Count) currentTaskIndex++;
             }
         } else {
             task.completed = true;
-            if (currentTaskIndex + 1 < tasks.Count) currentTaskIndex++;
+            if (currentTaskIndex + 1 < tasks[currentSceneIndex].Count) currentTaskIndex++;
         }
         UpdateTasks();  // Display updated information on the task list
     }
 
     // Function for reverting a task based on its index
     public void RevertTask(int index, int subtaskIndex) {
-        Task task = tasks[index];
+        Task task = tasks[currentSceneIndex][index];
 
         // Only revert the given subtask
         if (subtaskIndex > -1 && subtaskIndex < task.subtasks?.Count) {
@@ -150,8 +172,8 @@ public class HandMenuController : MonoBehaviour {
     }
 
     // Function for checking if a task is available
-    public bool TaskAvailable(int index) {
-        return index == currentTaskIndex;
+    public bool TaskAvailable(int index, int sceneIndex) {
+        return (index == currentTaskIndex && sceneIndex == currentSceneIndex);
     }
 
     // Coroutine for handling the menu fading in
