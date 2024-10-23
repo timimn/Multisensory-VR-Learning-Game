@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CollisionController : MonoBehaviour {
+public class FireFoamCollisionEvent : MonoBehaviour {
     [SerializeField]
     private float scaleReductionRate = 0.1f;
     [SerializeField]

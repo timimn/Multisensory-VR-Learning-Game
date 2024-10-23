@@ -13,6 +13,7 @@ public class HandMenuController : MonoBehaviour {
     private InputDevice leftController;
     private GameObject handMenu;
     private TextMeshProUGUI taskText;
+    private InputFeatureUsage<bool> resolvedButton;
     private CanvasGroup canvasGroup;
     private bool fadeActive = false;
     private int currentTaskIndex = 0;
@@ -65,6 +66,7 @@ public class HandMenuController : MonoBehaviour {
         leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         handMenu = this.gameObject.GetComponentInChildren<Canvas>().gameObject;
         taskText = this.gameObject.GetComponentsInChildren<TextMeshProUGUI>()[0];
+        resolvedButton = ButtonAvailable(CommonUsages.primaryButton) ? CommonUsages.primaryButton : CommonUsages.primary2DAxisClick;
         canvasGroup = handMenu.GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0;
         handMenu.SetActive(false);
@@ -83,14 +85,14 @@ public class HandMenuController : MonoBehaviour {
             handMenu.SetActive(false);
             return;
         }
-        bool secondaryButtonValue;
-        bool secondaryButtonPressed = leftController.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonValue) && secondaryButtonValue;
+        bool primaryButtonValue;
+        bool primaryButtonPressed = leftController.TryGetFeatureValue(resolvedButton, out primaryButtonValue) && primaryButtonValue;
 
         // If the left trigger is held, handle the menu fading in
-        if (secondaryButtonPressed && !fadeActive) {
+        if (primaryButtonPressed && !fadeActive) {
             StartCoroutine(FadeIn());
         // If the left trigger is released and the menu is still visible, handle the menu fading out
-        } else if (!secondaryButtonPressed && !fadeActive && canvasGroup.alpha > 0) {
+        } else if (!primaryButtonPressed && !fadeActive && canvasGroup.alpha > 0) {
             StartCoroutine(FadeOut());
         }
     }
@@ -174,6 +176,12 @@ public class HandMenuController : MonoBehaviour {
     // Function for checking if a task is available
     public bool TaskAvailable(int index, int sceneIndex) {
         return (index == currentTaskIndex && sceneIndex == currentSceneIndex);
+    }
+
+    // Function for checking if a button is available on the controller
+    private bool ButtonAvailable(InputFeatureUsage<bool> button) {
+        bool buttonValue;
+        return leftController.TryGetFeatureValue(button, out buttonValue);
     }
 
     // Coroutine for handling the menu fading in
